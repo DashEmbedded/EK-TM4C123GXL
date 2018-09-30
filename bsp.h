@@ -1,6 +1,17 @@
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #include <stdint.h>
 #include <stddef.h>
-
 
 enum {
 	GPIO_PORT_A = 0,
@@ -49,12 +60,12 @@ enum {
 //
 //*****************************************************************************
 enum {
- GPIO_STRENGTH_2MA    =   1U << 0,  // 2mA drive strength
- GPIO_STRENGTH_4MA    =   1U << 1,  // 4mA drive strength
- GPIO_STRENGTH_8MA    =   1U << 2,  // 8mA drive strength
- GPIO_STRENGTH_8MA_SC =   1U << 3,  // 8mA drive with slew rate control
- GPIO_STRENGTH_LAST 	= GPIO_STRENGTH_8MA_SC,
- GPIO_STRENGTH_MAX 	  = GPIO_STRENGTH_LAST
+ GPIO_STRENGTH_2MA    	=   1U << 0,  // 2mA drive strength
+ GPIO_STRENGTH_4MA    	=   1U << 1,  // 4mA drive strength
+ GPIO_STRENGTH_8MA    	=   1U << 2,  // 8mA drive strength
+ GPIO_STRENGTH_8MA_SC	=   1U << 3,  // 8mA drive with slew rate control
+ GPIO_STRENGTH_LAST 	= 	GPIO_STRENGTH_8MA_SC,
+ GPIO_STRENGTH_MAX		= 	GPIO_STRENGTH_LAST
 };
 
 //*****************************************************************************
@@ -65,38 +76,27 @@ enum {
 //*****************************************************************************
 enum {
  GPIO_PIN_TYPE_DEN       	= 1U << 0,  // Push-pull. used as digital input/output
- GPIO_PIN_TYPE_WPU   			= 1U << 1,  // weak pull-up
- GPIO_PIN_TYPE_WPD   			= 1U << 2,  // weak pull-down
- GPIO_PIN_TYPE_OD    			= 1U << 3,  // Open-drain
+ GPIO_PIN_TYPE_WPU   		= 1U << 1,  // weak pull-up
+ GPIO_PIN_TYPE_WPD   		= 1U << 2,  // weak pull-down
+ GPIO_PIN_TYPE_OD    		= 1U << 3,  // Open-drain
  GPIO_PIN_TYPE_ANALOG    	= 1U << 4,  // Analog comparator
- GPIO_PIN_TYPE_LAST 		 	= GPIO_PIN_TYPE_ANALOG,
- GPIO_PIN_TYPE_MAX 			 	= GPIO_PIN_TYPE_LAST
+ GPIO_PIN_TYPE_LAST 		= GPIO_PIN_TYPE_ANALOG,
+ GPIO_PIN_TYPE_MAX 			= GPIO_PIN_TYPE_LAST
 };
 
 
 #define GPIO_LED_PORT GPIO_PORT_F
-#define LED_RED 			GPIO_PIN1
-#define LED_BLUE 			GPIO_PIN2
+#define LED_RED 		GPIO_PIN1
+#define LED_BLUE 		GPIO_PIN2
 #define LED_GREEN 		GPIO_PIN3
-#define ALL_LED				(LED_RED|LED_BLUE|LED_GREEN)
-#define LED_ON 				1
-#define LED_OFF 			0
+#define ALL_LED			(LED_RED|LED_BLUE|LED_GREEN)
+#define LED_ON 			1
+#define LED_OFF 		0
 
 #define GPIO_BUTTON_PORT 	GPIO_PORT_F
-#define BUTTON_LEFT 			GPIO_PIN4
-#define BUTTON_RIGHT 			GPIO_PIN0
-#define ALL_BUTTONS				(BUTTON_LEFT | BUTTON_RIGHT)
-
-//*****************************************************************************
-//
-// Useful macros for detecting button events.
-//
-//*****************************************************************************
-#define BUTTON_PRESSED(button, debounced_state, Delta) \
-        (((button) & (Delta)) && ((button) & (debounced_state)))
-
-#define BUTTON_RELEASED(button, debounced_state, Delta) \
-        (((button) & (Delta)) && !((button) & (budebounced_statettons)))
+#define BUTTON_LEFT 		GPIO_PIN4
+#define BUTTON_RIGHT 		GPIO_PIN0
+#define ALL_BUTTONS			(BUTTON_LEFT | BUTTON_RIGHT)
 				
 //*****************************************************************************
 //
@@ -534,6 +534,7 @@ enum {
 #define SYSCTL_ALTCLK_RTCOSC    0x00000003
 #define SYSCTL_ALTCLK_LFIOSC    0x00000004				
 
+/*****Public A{I's to manage GPIO's*******/
 void GPIO_pin_toggle(uint32_t gpio_port, uint32_t pin_mask);
 void GPIO_pin_write(uint32_t gpio_port, uint32_t gpio_pin, uint8_t overwrite);
 uint32_t GPIO_pin_read(uint32_t gpio_port, uint32_t gpio_pin);
