@@ -1,5 +1,17 @@
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 #include "TM4C123GH6PM.h"
-#include "ti_bsp.h"
+#include "bsp.h"
 
 #define my_assert(cond) \
 	do { \
@@ -63,7 +75,7 @@ indicates output and a write of a 0 indicates input.
 3. Configure the GPIOAFSEL register to program each bit as a GPIO or alternate pin. If an alternate
 pin is chosen for a bit, then the PMCx field must be programmed in the GPIOPCTL register for
 the specific peripheral required. There are also two registers, GPIOADCCTL and GPIODMACTL,
-which can be used to program a GPIO pin as a ADC or µDMA trigger, respectively.
+which can be used to program a GPIO pin as a ADC or ÂµDMA trigger, respectively.
 
 4. Set the drive strength for each of the pins through the GPIODR2R, GPIODR4R, and GPIODR8R
 registers.
