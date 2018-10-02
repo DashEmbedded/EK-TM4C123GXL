@@ -1,15 +1,3 @@
-// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
-// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
-// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
-// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
-// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
-// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
-// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 #include "TM4C123GH6PM.h"
 #include "bsp.h"
 
@@ -140,91 +128,93 @@ static GPIO_state s_gpio_state[GPIO_PORT_MAX];
 
 static void GPIO_set_pad_config(GPIOA_Type* gpio_ctrl, uint8_t pin_mask, uint32_t strength, uint32_t pin_type)
 {
-	my_assert(pin_mask & 0xF);
+	pin_mask &= 0xFF;
+	
+	my_assert(pin_mask);
 	my_assert(strength < GPIO_STRENGTH_MAX);
 	my_assert(pin_type < GPIO_PIN_TYPE_MAX);
 	
 	//set the drive strength
 	if(strength & GPIO_STRENGTH_2MA)
 	{
-		gpio_ctrl->DR2R |= (pin_mask & 0xF);
+		gpio_ctrl->DR2R |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->DR2R &= ~(pin_mask & 0xF);
+		gpio_ctrl->DR2R &= ~pin_mask;
 	}
 	
 	if(strength & GPIO_STRENGTH_4MA)
 	{
-		gpio_ctrl->DR4R |= (pin_mask & 0xF);
+		gpio_ctrl->DR4R |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->DR4R &= ~(pin_mask & 0xF);
+		gpio_ctrl->DR4R &= ~pin_mask;
 	}
 	
 	if(strength & GPIO_STRENGTH_8MA)
 	{
-		gpio_ctrl->DR8R |= (pin_mask & 0xF);
+		gpio_ctrl->DR8R |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->DR8R &= ~(pin_mask & 0xFF);
+		gpio_ctrl->DR8R &= ~pin_mask;
 	}
 	
 	if(strength & GPIO_STRENGTH_8MA)
 	{
-		gpio_ctrl->DR8R |= (pin_mask & 0xFF);
+		gpio_ctrl->DR8R |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->DR8R &= ~(pin_mask & 0xF);
+		gpio_ctrl->DR8R &= ~pin_mask;
 	}
 	
 	if(strength & GPIO_STRENGTH_8MA_SC)
 	{
-		gpio_ctrl->SLR |= (pin_mask & 0xF);
+		gpio_ctrl->SLR |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->SLR &= ~(pin_mask & 0xF);
+		gpio_ctrl->SLR &= ~pin_mask;
 	}
 	
 	//set the pintype configs
 	if(pin_type & GPIO_PIN_TYPE_DEN) //push-pull confg, digital enable
 	{
-		gpio_ctrl->DEN |= (pin_mask & 0xF);
+		gpio_ctrl->DEN |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->DEN &= ~(pin_mask & 0xF);
+		gpio_ctrl->DEN &= ~pin_mask;
 	}
 	
 	if(pin_type & GPIO_PIN_TYPE_OD) //open drain confg.
 	{
-		gpio_ctrl->ODR |= (pin_mask & 0xF);
+		gpio_ctrl->ODR |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->ODR &= ~(pin_mask & 0xF);
+		gpio_ctrl->ODR &= ~pin_mask;
 	}
 	
 	if(pin_type & GPIO_PIN_TYPE_WPD) //weak pull down confg.
 	{
-		gpio_ctrl->PDR |= (pin_mask & 0xF);
+		gpio_ctrl->PDR |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->PDR &= ~(pin_mask & 0xF);
+		gpio_ctrl->PDR &= ~pin_mask;
 	}
 	
 	if(pin_type & GPIO_PIN_TYPE_WPU) //weak pullup confg.
 	{
-		gpio_ctrl->PUR |= (pin_mask & 0xF);
+		gpio_ctrl->PUR |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->PUR &= ~(pin_mask & 0xF);
+		gpio_ctrl->PUR &= ~pin_mask;
 	}
 }
 
@@ -236,7 +226,7 @@ static void GPIO_enable_clock(uint32_t gpio_port)
 	{
 		uint32_t port_mask;
 		
-		port_mask = (1U << (gpio_port & 0xF));
+		port_mask = (1U << (gpio_port & 0xFF));
 		
 		SYSCTL->RCGCGPIO |= port_mask;
 		
@@ -248,24 +238,26 @@ static void GPIO_enable_clock(uint32_t gpio_port)
 
 static void GPIO_set_direction(GPIOA_Type* gpio_ctrl, uint32_t pin_mask, uint32_t direction)
 {
-	my_assert(pin_mask & 0xFF);
+	pin_mask &= 0xFF;
+	
+	my_assert(pin_mask);
 	
 	if(direction & GPIO_DIR_OUT)
 	{
-		gpio_ctrl->DIR |= (pin_mask & 0xF);
+		gpio_ctrl->DIR |= pin_mask;
 	}
 	else if (direction & GPIO_DIR_IN)
 	{
-		gpio_ctrl->DIR &= ~(pin_mask & 0xF);
+		gpio_ctrl->DIR &= ~pin_mask;
 	}
 	
 	if( direction & GPIO_DIR_AF)
 	{
-		gpio_ctrl->AFSEL |= (pin_mask & 0xF);
+		gpio_ctrl->AFSEL |= pin_mask;
 	}
 	else
 	{
-		gpio_ctrl->AFSEL &= ~(pin_mask & 0xF);
+		gpio_ctrl->AFSEL &= ~pin_mask;
 	}
 }
 
@@ -302,7 +294,7 @@ void GPIO_pin_toggle(uint32_t gpio_port, uint32_t pin_mask)
 	GPIOA_Type* GPIO_CTL;
 	uint32_t data;
 	
-	pin_mask = pin_mask & 0xF;
+	pin_mask &= 0xFF;
 
 	my_assert(gpio_port < GPIO_PORT_MAX);
 	my_assert(s_gpio_state[gpio_port].clock_on && s_gpio_state[gpio_port].GPIO_CTL);
@@ -321,7 +313,7 @@ void GPIO_pin_write(uint32_t gpio_port, uint32_t pin_mask, uint8_t overwrite)
 {
 	GPIOA_Type* GPIO_CTL;
 	
-	pin_mask = pin_mask & 0xF;
+	pin_mask &= 0xFF;
 
 	my_assert(gpio_port < GPIO_PORT_MAX);
 	my_assert(s_gpio_state[gpio_port].clock_on && s_gpio_state[gpio_port].GPIO_CTL);
@@ -343,7 +335,7 @@ uint32_t GPIO_pin_read(uint32_t gpio_port, uint32_t pin_mask)
 	GPIOA_Type* GPIO_CTL;
 	uint32_t data;
 	
-	pin_mask = pin_mask & 0xF;
+	pin_mask &= 0xF;
 	
 	my_assert(gpio_port < GPIO_PORT_MAX);
 	my_assert(s_gpio_state[gpio_port].clock_on && s_gpio_state[gpio_port].GPIO_CTL);
@@ -657,8 +649,3 @@ void bsp_clock_set(uint32_t Config)
     //
     bsp_delay(16);
 }
-
-
-
-
-
